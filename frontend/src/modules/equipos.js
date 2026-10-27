@@ -1,26 +1,28 @@
-import { request } from "./api.js";
+import { request } from './api.js';
 
-// YA IMPLEMENTADO — ejemplo de uso de request()
-// Respuesta: { data: [ { id, nombre }, ... ] }
-export const listarCategorias = () => request("/categorias");
+export async function listarEquipos({ page = 1, perPage = 10, q = '', estado = '' } = {}) {
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('per_page', perPage);
+  if (q) params.set('q', q);
+  if (estado) params.set('estado', estado);
 
-/**
- * TODO [F1] Funciones de acceso a la API de equipos.
- * Todas deben usar request(); ninguna llama a fetch.
- */
+  return request(`/equipos?${params.toString()}`);
+}
 
-// GET /equipos?page=<pagina>&per_page=<porPagina>
-// Respuesta: { data: [...], links: {...}, meta: { current_page, last_page, from, to, total, ... } }
-export const listarEquipos = (pagina = 1, porPagina = 6) => {
-  // TODO
-};
+export async function listarCategorias() {
+  return request('/categorias');
+}
 
-// POST /equipos   -> 201 con el equipo creado | 422 con { message, errors }
-export const crearEquipo = (datos) => {
-  // TODO
-};
+export async function crearEquipo(datos) {
+  return request('/equipos', {
+    method: 'POST',
+    body: datos,
+  });
+}
 
-// DELETE /equipos/<id>   -> 204 | 404 | 409 con { mensaje, codigo }
-export const eliminarEquipo = (id) => {
-  // TODO
-};
+export async function eliminarEquipo(id) {
+  return request(`/equipos/${id}`, {
+    method: 'DELETE',
+  });
+}
